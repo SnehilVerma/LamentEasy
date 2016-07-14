@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,7 @@ public class Login extends AppCompatActivity {
     private Button btnSignup, btnLogin, btnReset;
     private String user_key;
     private int save_profile=0;
+    private String currPro;
 
 
     /// database shit////
@@ -51,10 +53,6 @@ public class Login extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-        /*user_key = getIntent().getStringExtra(EXTRA_USER_KEY);
-        if (user_key == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
-        }*/
 
 
 
@@ -63,14 +61,22 @@ public class Login extends AppCompatActivity {
 
 
 
+        /// to keep the user logged in until he signs out///
 
-        /*
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(Login.this, MainActivity.class));
+        if (auth.getCurrentUser() != null && currPro!=null) {
 
-            finish();
-        }
-        */
+
+            if(currPro.equals("admin"))
+                startActivity(new Intent(Login.this, MainActivity.class));
+            else if(currPro.equals("employee"))
+                startActivity(new Intent(Login.this,EmployeeActivity.class));
+
+            }
+
+            //finish();
+
+
+
 
         // set the view now
         setContentView(R.layout.activity_login);
@@ -138,10 +144,11 @@ public class Login extends AppCompatActivity {
                                     if (password.length() < 6) {
                                         progressBar.setVisibility(View.GONE);
                                         inputPassword.setError(getString(R.string.minimum_password));
-                                    } else {
                                         progressBar.setVisibility(View.GONE);
-                                        Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                    } else {
 
+                                        Toast.makeText(Login.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                        progressBar.setVisibility(View.GONE);
                                     }
                                 } else if(task.isSuccessful()){
 
@@ -156,18 +163,20 @@ public class Login extends AppCompatActivity {
 
                                             String pro=user.profile;
                                             if(pro.equals("admin")){
+                                                currPro="admin";
                                                 Toast.makeText(getApplicationContext(), "found admin!", Toast.LENGTH_SHORT).show();
                                                 progressBar.setVisibility(View.GONE);
                                                 startActivity(new Intent(Login.this, MainActivity.class));
-                                                finish();
+                                                //finish();
 
 
                                             }
                                             else if(pro.equals("employee")){
+                                                currPro="employee";
                                                 Toast.makeText(getApplicationContext(), "found employee!", Toast.LENGTH_SHORT).show();
                                                 progressBar.setVisibility(View.GONE);
                                                 startActivity(new Intent(Login.this, EmployeeActivity.class));
-                                                finish();
+                                                //finish();
 
 
 
@@ -197,23 +206,22 @@ public class Login extends AppCompatActivity {
             }
 
 
-
-
-
-
-
-
-    private void checkProfile(int save_profile){
-        if(save_profile==1)
-        { startActivity(new Intent(Login.this, MainActivity.class));
-            finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        {
+            this.moveTaskToBack(true);
+            return true;
         }
-        else if(save_profile==2)
-        {Intent intent = new Intent(Login.this, EmployeeActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        return super.onKeyDown(keyCode, event);
     }
+
+
+
+
+
+
+
 
 }
 
