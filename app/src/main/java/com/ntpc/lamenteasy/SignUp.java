@@ -124,8 +124,9 @@ public class SignUp extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     FirebaseUser user=auth.getCurrentUser();
+                                    String username = usernameFromEmail(user.getEmail());
 
-                                    writeNewUser(user.getUid(),email,inputChoice);
+                                    writeNewUser(username,user.getUid(),email,inputChoice);
                                     startActivity(new Intent(SignUp.this,MainActivity.class));
 
                                     finish();
@@ -145,9 +146,22 @@ public class SignUp extends AppCompatActivity {
 
 
     //// method to add user to the database/////
-    private void writeNewUser(String userId, String email, String profile) {
-        User user = new User(email,profile);
+    private void writeNewUser(String username,String userId, String email, String profile) {
+
+        User user = new User(username,email,profile);
 
         mDatabase.child("users").child(userId).setValue(user);
+
     }
+
+
+
+    private String usernameFromEmail(String email) {
+        if (email.contains("@")) {
+            return email.split("@")[0];
+        } else {
+            return email;
+        }
+    }
+
 }

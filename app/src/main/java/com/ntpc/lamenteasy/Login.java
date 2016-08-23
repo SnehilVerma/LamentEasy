@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ntpc.lamenteasy.models.Complaint;
 import com.ntpc.lamenteasy.models.User;
 
 public class Login extends AppCompatActivity {
@@ -69,7 +70,7 @@ public class Login extends AppCompatActivity {
             if(currPro.equals("admin"))
                 startActivity(new Intent(Login.this, MainActivity.class));
             else if(currPro.equals("employee"))
-                startActivity(new Intent(Login.this,EmployeeActivity.class));
+                startActivity(new Intent(Login.this,Complaint.class));
 
             }
 
@@ -175,7 +176,7 @@ public class Login extends AppCompatActivity {
                                                 currPro="employee";
                                                 Toast.makeText(getApplicationContext(), "found employee!", Toast.LENGTH_SHORT).show();
                                                 progressBar.setVisibility(View.GONE);
-                                                startActivity(new Intent(Login.this, EmployeeActivity.class));
+                                                startActivity(new Intent(Login.this, NewPost.class));
                                                 //finish();
 
 
@@ -205,6 +206,8 @@ public class Login extends AppCompatActivity {
                         });
             }
 
+
+    // back feature enabled to sustain the app//
 
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
