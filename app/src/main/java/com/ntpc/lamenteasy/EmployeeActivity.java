@@ -15,6 +15,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class EmployeeActivity extends AppCompatActivity {
 
@@ -25,6 +31,7 @@ public class EmployeeActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    private String user_key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +218,36 @@ public class EmployeeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 if (user != null) {
+
+
+                    FirebaseUser user=auth.getCurrentUser();
+                    user_key=user.getUid();
+
+                    //mDatabase=FirebaseDatabase.getInstance().getReference().child("users").child(user_key);
+                    String user_email=user.getEmail();
+                    Toast t=Toast.makeText(getApplicationContext(),user_email,Toast.LENGTH_SHORT);
+                    t.show();
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    Query userQuery = ref.child("users").orderByChild("email").equalTo(user_email);
+
+                    userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                                userSnapshot.getRef().removeValue();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //Log.e(TAG, "onCancelled", databaseError.toException());
+                        }
+                    });
+
+
+
+
                     user.delete()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.ntpc.lamenteasy.models.User;
 
@@ -222,22 +224,31 @@ public class MainActivity extends AppCompatActivity {
 
                     FirebaseUser user=auth.getCurrentUser();
                     user_key=user.getUid();
-                    mDatabase=FirebaseDatabase.getInstance().getReference().child("users").child(user_key);
 
-                    mDatabase.child("users").child(user_key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    //mDatabase=FirebaseDatabase.getInstance().getReference().child("users").child(user_key);
+                    String user_email=user.getEmail();
+                    Toast t=Toast.makeText(getApplicationContext(),user_email,Toast.LENGTH_SHORT);
+                    t.show();
+
+                    // DELETE THE USER ACCOUNT RECORD FROM THE DATABASE.
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    Query userQuery = ref.child("users").orderByChild("email").equalTo(user_email);
+
+                    userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(MainActivity.this, "database entry is deleted is deleted:( Create a account now!", Toast.LENGTH_SHORT).show();
-
-
-                            }
-                            else{
-                                Toast.makeText(MainActivity.this, "failure", Toast.LENGTH_SHORT).show();
-
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                                userSnapshot.getRef().removeValue();
                             }
                         }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //Log.e(TAG, "onCancelled", databaseError.toException());
+                        }
                     });
+
+
 
                     user.delete()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -176,7 +176,7 @@ public class Login extends AppCompatActivity {
                                                 currPro="employee";
                                                 Toast.makeText(getApplicationContext(), "found employee!", Toast.LENGTH_SHORT).show();
                                                 progressBar.setVisibility(View.GONE);
-                                                startActivity(new Intent(Login.this, NewPost.class));
+                                                startActivity(new Intent(Login.this, EmployeeHome.class));
                                                 //finish();
 
 

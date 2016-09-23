@@ -27,4 +27,6 @@ public class User {
     public String getProfile(){
         return profile;
     }
+
+   // public String getEmail(){return email;}
 }

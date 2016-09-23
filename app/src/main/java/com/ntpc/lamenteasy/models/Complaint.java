@@ -14,6 +14,8 @@ public class Complaint {
     public String author;
     public String title;
     public String body;
+    //public int starCount = 0;
+    //public Map<String, Boolean> stars = new HashMap<>();
 
     public int viewed;
     //public int taskprogress;
@@ -36,7 +38,8 @@ public class Complaint {
         result.put("author", author);
         result.put("title", title);
         result.put("body", body);
-
+ //       result.put("starCount", starCount);
+  //      result.put("stars",stars);
         return result;
     }
     // [END post_to_map]

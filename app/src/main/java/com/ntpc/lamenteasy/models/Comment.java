@@ -20,5 +20,6 @@ public class Comment {
         this.text = text;
     }
 
+
 }
 // [END comment_class]

@@ -32,11 +32,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_submit_post"
+
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ntpc"/>
+        android:src="@drawable/tick"/>
 
 </RelativeLayout>
